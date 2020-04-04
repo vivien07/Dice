@@ -3,16 +3,46 @@ import Cocoa
 
 class DieView: NSView {
     
+    
+    override var intrinsicContentSize: NSSize {
+        return NSSize(width: 20, height: 20)
+    }
+    
     var numberOfDots: Int? = 1 {
         didSet {
             needsDisplay = true //when the value is being changed, the view has to be redrawn
         }
     }
     
-    
-    override var intrinsicContentSize: NSSize {
-        return NSSize(width: 20, height: 20)
+    var pressed: Bool = false {
+        didSet {
+            needsDisplay = true
+        }
     }
+    
+    //MARK: - First Responder
+     
+    override var acceptsFirstResponder: Bool {
+        return true
+    }
+    
+    override func becomeFirstResponder() -> Bool {
+        return true
+    }
+    
+    override func resignFirstResponder() -> Bool {
+        return true
+    }
+    
+    override func drawFocusRingMask() {
+        NSBezierPath.fill(metricsForSize(size: bounds.size).dieFrame)
+    }
+    
+    override var focusRingMaskBounds: NSRect {
+        return bounds
+    }
+    
+     //MARK: - Drawing
     
     override func draw(_ dirtyRect: NSRect) {
         
@@ -29,7 +59,10 @@ class DieView: NSView {
         let edgeLength = min(size.width, size.height)
         let padding = edgeLength/10.0
         let drawingBounds = CGRect(x: 0, y: 0, width: edgeLength, height: edgeLength)
-        let dieFrame = drawingBounds.insetBy(dx: padding, dy: padding)
+        var dieFrame = drawingBounds.insetBy(dx: padding, dy: padding)  //Returns a rectangle with an origin that is offset from that of the source rectangle.
+        if pressed {
+            dieFrame = dieFrame.offsetBy(dx: 0, dy: -edgeLength/40)
+        }
         return (edgeLength, dieFrame)
         
     }
@@ -48,7 +81,7 @@ class DieView: NSView {
             
             let shadow = NSShadow()
             shadow.shadowOffset = NSSize(width: 0, height: -1)
-            shadow.shadowBlurRadius = edgeLength/20
+            shadow.shadowBlurRadius = (pressed ? edgeLength/100 : edgeLength/20)
             shadow.set()
             NSColor.red.set()
             NSBezierPath(roundedRect: dieFrame, xRadius: cornerRadius, yRadius: cornerRadius).fill()
@@ -62,12 +95,11 @@ class DieView: NSView {
             NSColor.white.set()
             
             func drawDot(u: CGFloat, v: CGFloat) {
-                
                 let dotOrigin = CGPoint(x: dotFrame.minX + dotFrame.width * u, y: dotFrame.minY + dotFrame.height * v)
                 let dotRect = CGRect(origin: dotOrigin, size: CGSize.zero).insetBy(dx: -dotRadius, dy: -dotRadius)  //a square
                 NSBezierPath(ovalIn: dotRect).fill()    //a circle inside the square
-                
             }
+            
             if (numberOfDots >= 1 && numberOfDots <= 6) {
                 switch numberOfDots {
                 case 1:
@@ -102,11 +134,55 @@ class DieView: NSView {
                 }
             }
             
-            
         }//end of if block
         
     }
+    
+    
+    
+    //MARK: - Mouse Events
+    
+    override func mouseDown(with event: NSEvent) {
+        //checks if the user clicked in the die's view
+        let dieFrame = metricsForSize(size: bounds.size).dieFrame
+        let point = convert(event.locationInWindow, from: nil)
+        pressed = dieFrame.contains(point)
+    }
+    
+    
+    override func mouseUp(with event: NSEvent) {
+        if (pressed == true && event.clickCount == 2) {
+            randomize()
+        }
+        pressed = false
+    }
+    
+    func randomize() {
+        numberOfDots = Int.random(in: 1...6)
+    }
+    
+    
+    //MARK: - Keyboard Events
    
+    
+    override func keyDown(with event: NSEvent) {
+        interpretKeyEvents([event])
+    }
+    
+    override func insertText(_ insertString: Any) {
+        let text = insertString as! String
+        if let number = Int(text) {
+            numberOfDots = number
+        }
+    }
+    
+    override func insertTab(_ sender: Any?) {
+        window?.selectNextKeyView(sender)
+    }
+    
+    override func insertBacktab(_ sender: Any?) {
+        window?.selectPreviousKeyView(sender)
+    }
     
 }
 
