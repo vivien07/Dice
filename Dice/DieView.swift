@@ -21,7 +21,7 @@ class DieView: NSView {
     }
     
     //MARK: - First Responder
-     
+    
     override var acceptsFirstResponder: Bool {
         return true
     }
@@ -42,7 +42,7 @@ class DieView: NSView {
         return bounds
     }
     
-     //MARK: - Drawing
+    //MARK: - Drawing
     
     override func draw(_ dirtyRect: NSRect) {
         
@@ -100,7 +100,7 @@ class DieView: NSView {
                 NSBezierPath(ovalIn: dotRect).fill()    //a circle inside the square
             }
             
-            if (numberOfDots >= 1 && numberOfDots <= 6) {
+            if (numberOfDots >= 1 && numberOfDots <= 9) {
                 switch numberOfDots {
                 case 1:
                     drawDot(u: 0.5, v: 0.5)
@@ -130,7 +130,13 @@ class DieView: NSView {
                     drawDot(u: 0, v: 0.5)
                     drawDot(u: 1, v: 0.5)
                 default:
-                    return
+                    let paraStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
+                    paraStyle.alignment = .center
+                    let attrs = [NSAttributedString.Key.foregroundColor: NSColor.white,
+                                 NSAttributedString.Key.font: NSFont.systemFont(ofSize: edgeLength * 0.5),
+                                 NSAttributedString.Key.paragraphStyle: paraStyle]
+                    let string = "\(numberOfDots)" as NSString
+                    string.drawCenteredInRect(rect: dieFrame, attributes: attrs)
                 }
             }
             
@@ -163,7 +169,7 @@ class DieView: NSView {
     
     
     //MARK: - Keyboard Events
-   
+    
     
     override func keyDown(with event: NSEvent) {
         interpretKeyEvents([event])
@@ -183,6 +189,64 @@ class DieView: NSView {
     override func insertBacktab(_ sender: Any?) {
         window?.selectPreviousKeyView(sender)
     }
+    
+    
+    @IBAction func savePDF(sender: AnyObject) {
+        
+        let savePanel = NSSavePanel()
+        savePanel.allowedFileTypes = ["pdf"]
+        savePanel.beginSheetModal(for: window!) { (result) in
+            if result == .OK {
+                let data = self.dataWithPDF(inside: self.bounds)
+                do {
+                    try data.write(to: savePanel.url!, options: .atomic)
+                } catch {
+                    let alert = NSAlert(error: error)
+                    alert.runModal()
+                }
+            }
+        }
+        
+    }
+    
+    
+    //MARK: - Pasteboard
+    
+    func writeToPasteboard(pasteboard: NSPasteboard) {
+        
+        if numberOfDots != nil {
+            pasteboard.clearContents()
+            let nsstring = String(numberOfDots!) as NSString
+            pasteboard.writeObjects([nsstring])
+        }
+        
+    }
+    
+    
+    func readFromPasteboard(pasteboard: NSPasteboard) -> Bool {
+        
+        let objects = pasteboard.readObjects(forClasses: [NSString.self], options: [:] ) as! [String]
+        if let str = objects.first {
+            numberOfDots = Int(str)
+            return true
+        }
+        return false
+        
+    }
+    
+    @IBAction func cut(sender: AnyObject?) {
+        writeToPasteboard(pasteboard: NSPasteboard.general)
+        numberOfDots = nil
+    }
+    
+    @IBAction func copy(sender: AnyObject?) {
+        writeToPasteboard(pasteboard: NSPasteboard.general)
+    }
+    
+    @IBAction func paste(sender: AnyObject?) {
+        readFromPasteboard(pasteboard: NSPasteboard.general)
+    }
+    
     
 }
 
