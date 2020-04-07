@@ -14,6 +14,8 @@
 		8480B70B2437914D00C6A430 /* MainWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8480B7092437914D00C6A430 /* MainWindowController.xib */; };
 		8480B70D2437919700C6A430 /* DieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8480B70C2437919700C6A430 /* DieView.swift */; };
 		8480B70F2439CB0B00C6A430 /* NSString+Drawing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8480B70E2439CB0B00C6A430 /* NSString+Drawing.swift */; };
+		8480B715243B3AB000C6A430 /* ConfigurationWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8480B713243B3AB000C6A430 /* ConfigurationWindowController.swift */; };
+		8480B716243B3AB000C6A430 /* ConfigurationWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8480B714243B3AB000C6A430 /* ConfigurationWindowController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +29,8 @@
 		8480B7092437914D00C6A430 /* MainWindowController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindowController.xib; sourceTree = "<group>"; };
 		8480B70C2437919700C6A430 /* DieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DieView.swift; sourceTree = "<group>"; };
 		8480B70E2439CB0B00C6A430 /* NSString+Drawing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSString+Drawing.swift"; sourceTree = "<group>"; };
+		8480B713243B3AB000C6A430 /* ConfigurationWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationWindowController.swift; sourceTree = "<group>"; };
+		8480B714243B3AB000C6A430 /* ConfigurationWindowController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConfigurationWindowController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,17 +63,43 @@
 		8480B6F92437911100C6A430 /* Dice */ = {
 			isa = PBXGroup;
 			children = (
-				8480B6FA2437911100C6A430 /* AppDelegate.swift */,
-				8480B7082437914D00C6A430 /* MainWindowController.swift */,
-				8480B7092437914D00C6A430 /* MainWindowController.xib */,
-				8480B6FC2437911200C6A430 /* Assets.xcassets */,
-				8480B6FE2437911200C6A430 /* MainMenu.xib */,
+				8480B711243B36A200C6A430 /* Supporting Files */,
+				8480B712243B370D00C6A430 /* Controller */,
+				8480B710243B367300C6A430 /* View */,
 				8480B7012437911200C6A430 /* Info.plist */,
 				8480B7022437911200C6A430 /* Dice.entitlements */,
-				8480B70C2437919700C6A430 /* DieView.swift */,
-				8480B70E2439CB0B00C6A430 /* NSString+Drawing.swift */,
 			);
 			path = Dice;
+			sourceTree = "<group>";
+		};
+		8480B710243B367300C6A430 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				8480B70C2437919700C6A430 /* DieView.swift */,
+				8480B714243B3AB000C6A430 /* ConfigurationWindowController.xib */,
+				8480B7092437914D00C6A430 /* MainWindowController.xib */,
+				8480B6FE2437911200C6A430 /* MainMenu.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		8480B711243B36A200C6A430 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				8480B70E2439CB0B00C6A430 /* NSString+Drawing.swift */,
+				8480B6FA2437911100C6A430 /* AppDelegate.swift */,
+				8480B6FC2437911200C6A430 /* Assets.xcassets */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		8480B712243B370D00C6A430 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				8480B7082437914D00C6A430 /* MainWindowController.swift */,
+				8480B713243B3AB000C6A430 /* ConfigurationWindowController.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -132,6 +162,7 @@
 			files = (
 				8480B6FD2437911200C6A430 /* Assets.xcassets in Resources */,
 				8480B70B2437914D00C6A430 /* MainWindowController.xib in Resources */,
+				8480B716243B3AB000C6A430 /* ConfigurationWindowController.xib in Resources */,
 				8480B7002437911200C6A430 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -145,6 +176,7 @@
 			files = (
 				8480B70F2439CB0B00C6A430 /* NSString+Drawing.swift in Sources */,
 				8480B70A2437914D00C6A430 /* MainWindowController.swift in Sources */,
+				8480B715243B3AB000C6A430 /* ConfigurationWindowController.swift in Sources */,
 				8480B6FB2437911100C6A430 /* AppDelegate.swift in Sources */,
 				8480B70D2437919700C6A430 /* DieView.swift in Sources */,
 			);

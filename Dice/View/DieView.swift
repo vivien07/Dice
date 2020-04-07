@@ -27,8 +27,15 @@ class DieView: NSView {
         }
     }
     
+    var color: NSColor = NSColor.red {
+        didSet {
+            needsDisplay = true
+        }
+    }
+    
+    var numberOfRolls: Int = 10
     var mouseDownEvent: NSEvent?
-    var rollsRemaining = 10  //helps to determine when to stop the timer
+    var rollsRemaining = 0 //helps to determine when to stop the timer
     
     //MARK: - Initializers
     
@@ -77,7 +84,7 @@ class DieView: NSView {
         bgColor.set()
         NSBezierPath.fill(bounds)
         if highlighted {
-            let gradient = NSGradient(starting: NSColor.white, ending: bgColor)
+            let gradient = NSGradient(starting: color, ending: bgColor)
             gradient?.draw(in: bounds, relativeCenterPosition: NSZeroPoint)
         } else {
             drawDieWithSize(size: bounds.size)
@@ -115,7 +122,8 @@ class DieView: NSView {
             shadow.shadowOffset = NSSize(width: 0, height: -1)
             shadow.shadowBlurRadius = (pressed ? edgeLength/100 : edgeLength/20)
             shadow.set()
-            NSColor.red.set()
+            
+            color.set()
             NSBezierPath(roundedRect: dieFrame, xRadius: cornerRadius, yRadius: cornerRadius).fill()
             
             NSColor.black.set()
@@ -228,6 +236,7 @@ class DieView: NSView {
     
     func randomize() {
         numberOfDots = Int.random(in: 1...6)
+        rollsRemaining -= 1
     }
     
     
@@ -309,24 +318,24 @@ class DieView: NSView {
     @IBAction func paste(sender: AnyObject?) {
         readFromPasteboard(pasteboard: NSPasteboard.general)
     }
-    
+
     
     //MARK: - Timer
     
     func roll() {
+        rollsRemaining = numberOfRolls
         Timer.scheduledTimer(timeInterval: 0.15, target: self, selector: #selector(rollTick), userInfo: nil, repeats: true)
         window?.makeFirstResponder(nil) //removes the blue selection indicator
     }
     
+    
     @objc func rollTick(sender: Timer) {
         randomize()
-        rollsRemaining -= 1
-        print("rollsRemaining: \(rollsRemaining)")
         if rollsRemaining == 0 {
             sender.invalidate()
-            rollsRemaining = 10
             window?.makeFirstResponder(self)
         }
+        
     }
 
     
